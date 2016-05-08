@@ -10,11 +10,7 @@ import List from 'components/List';
 class Edit extends Component {
     render() {
         return (
-            <div className="container">
-                <Header />
-                <div>this is edit</div>
-                <Footer />
-            </div>
+            <div>this is edit</div>
         );
     }
 }

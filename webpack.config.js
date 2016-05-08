@@ -5,14 +5,15 @@ const WebpackDevServer = require("webpack-dev-server");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const path = require("path");
 const fs = require("fs");
-const _ = require("lodash");
+const mergeWith = require('lodash/mergeWith');
 
 const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     entry: {
-        'main': ['./src/entries/main.js'],
-        'route_test': ['./src/entries/route_test.js']
+        'main': ['webpack-dev-server/client?http://localhost:8080/',
+                'webpack/hot/dev-server',
+                './src/entries/main.js']
     },
     output: {
         publicPath: 'http://localhost:8080/assets',

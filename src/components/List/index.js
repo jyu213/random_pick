@@ -13,6 +13,7 @@ class List extends Component {
     // }
 
     render() {
+        console.log('list fn')
         let { userList, defaultList } = this.props;
         let list = (userList && userList.length > 0 ? userList : defaultList) || [];
 

@@ -9,7 +9,10 @@ import store from 'store/pickList';
 let App = React.createClass({
     render() {
         return (
-            <div>app-app-{this.props.children}</div>
+            <div>
+                <Link to="/add">as</Link>
+                {this.props.children}
+            </div>
         );
     }
 });

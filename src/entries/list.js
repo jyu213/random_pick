@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 
 import store from 'store/pickList';
 
@@ -7,13 +8,13 @@ import Footer from 'components/Footer';
 import List from 'components/List';
 
 
-class Detail extends Component {
+class ListDetail extends Component {
     render() {
         return (
-            <div>this is detail</div>
+            <List />
         );
     }
 }
 
-export default Detail;
+export default ListDetail;
 
