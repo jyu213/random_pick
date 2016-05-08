@@ -5,7 +5,7 @@ import './style';
 function Header(props) {
     return (
         <header className="header">
-            header
+            Random Pick
         </header>
     );
 }
