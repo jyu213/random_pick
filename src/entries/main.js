@@ -12,6 +12,7 @@ import Add from './add';
 import Edit from './edit';
 import Detail from './detail';
 import NoMatch from './noMatch';
+
 import Header from 'components/Header';
 import Footer from 'components/Footer';
 import List from 'components/List';
@@ -19,13 +20,7 @@ import List from 'components/List';
 let App = React.createClass({
     render() {
         return (
-            <Provider store={store}>
-                <div className="container">
-                    <Header />
-                    {this.props.children}
-                    <Footer />
-                </div>
-            </Provider>
+            <div className="container">{this.props.children}</div>
         );
     }
 });
@@ -37,12 +32,14 @@ const routes = {
     childRoutes: [
         {path: 'index', component: List},
         {path: 'add', component: Add},
-        {path: 'edit/:pickId', component: Edit},
-        {path: 'detail/:pickId', component: Detail},
+        {path: 'edit/:type/:pickId', component: Edit},
+        {path: 'detail/:type/:pickId', component: Detail},
         {path: '*', component: NoMatch}
     ]
 };
 
 render((
-    <Router history={browserHistory} routes={routes} />
+    <Provider store={store}>
+        <Router history={browserHistory} routes={routes} />
+    </Provider>
 ),document.getElementById('wrap'));

@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 
-import store from 'store/pickList';
-
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import List from 'components/List';
-
+import DetailView from 'components/Detail';
 
 class Detail extends Component {
     render() {
+        let { params } = this.props;
+
         return (
-            <div>this is detail</div>
+            <div className="container">
+                <Header title={params.title} />
+                <DetailView params={params} />
+                <Footer />
+            </div>
         );
     }
 }

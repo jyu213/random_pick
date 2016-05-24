@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import {
-    ADD_DEFAULT_LIST
+    ADD_DEFAULT_LIST,
+    UPDATE_USER_LIST
 } from 'actions/pickList';
 
 function pickList(state = {}, action) {
@@ -11,6 +12,11 @@ function pickList(state = {}, action) {
             return {
                 ...state,
                 defaultList: payload
+            };
+        case UPDATE_USER_LIST:
+            return {
+                ...state,
+                userList: payload
             };
         default:
             return state;

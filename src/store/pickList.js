@@ -3,8 +3,7 @@ import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import createLogger from 'redux-logger';
 
-import { setDefaultList } from 'actions/pickList';
-import defaultListValue from '../data/defaultList';
+import { getDefaultList, getUserList, updateUserList } from 'actions/pickList';
 
 const middlewares = [thunk];
 
@@ -14,7 +13,11 @@ if (process.env.NODE_ENV === 'dev') {
 
 let listStore = createStore(pickList, applyMiddleware(...middlewares));
 
-listStore.dispatch(setDefaultList(defaultListValue));
-// listStore.dispatch();
+listStore.dispatch(getDefaultList());
+listStore.dispatch(getUserList());
+
+// var unSubscribe = listStore.subscribe(function(){
+//     console.log('dispatch!!!')
+// })
 
 export default listStore;

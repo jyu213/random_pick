@@ -1,11 +1,13 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 
 function ListItem(props) {
-    let { title, items } = props.data;
+    let { id, title, items } = props.data,
+        type = props.type;
 
     let list = items.map((item) => {
         return (
-            <div className="pick-list__desc" key={ item.name }>
+            <div className="pick-list__desc" key={ item.value }>
                 <p>{ item.name }</p>
                 <p>{ item.value }</p>
             </div>
@@ -14,7 +16,7 @@ function ListItem(props) {
 
     return (
         <section className="pick-list__item">
-            <h3>{title}</h3>
+            <h3><Link to={`/detail/${type}/${id}`}>{title}</Link></h3>
             { list }
         </section>
     );

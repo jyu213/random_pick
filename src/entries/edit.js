@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 
-import store from 'store/pickList';
-
 import Header from 'components/Header';
 import Footer from 'components/Footer';
-import List from 'components/List';
-
+import AddView from 'components/Add';
 
 class Edit extends Component {
     render() {
+        let { params } = this.props;
+
         return (
-            <div>this is edit</div>
+            <AddView params={params} />
         );
     }
 }
 
 export default Edit;
-

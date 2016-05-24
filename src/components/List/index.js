@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
+import idMaker from 'utils/idMaker';
+import defaultListValue from 'data/defaultList';
 import { setDefaultList } from 'actions/pickList';
 import ListItem from './listItem';
 import OptionBtn from './OptionBtn';
@@ -8,22 +10,33 @@ import OptionBtn from './OptionBtn';
 import './style';
 
 class List extends Component {
-    // constructor(props) {
-    //     super(props);
-    // }
+    constructor(props) {
+        super(props);
+
+        // 默认列表注入
+        if (!localStorage.getItem('defaultList')) {
+            let defaultListJson;
+            defaultListValue.map((item) => {
+                item.id = idMaker(item.title);
+                return item;
+            });
+            defaultListJson = JSON.stringify(defaultListValue);
+            localStorage.setItem('defaultList', defaultListJson);
+        }
+    }
 
     render() {
-        console.log('list fn')
         let { userList, defaultList } = this.props;
-        let list = (userList && userList.length > 0 ? userList : defaultList) || [];
+        let type = userList && userList.length > 0 ? 1 : 0;
+        let list = (type ? userList : defaultList) || [];
 
         let NodeList = list.map((item) => {
-            return (<ListItem data={item} key={item.title} />);
+            return (<ListItem data={item} type={type} key={item.title} />);
         });
 
         return (
-            <div className="pickBox">
-                <div className="pickList">
+            <div className="pick-box">
+                <div className="pick-list">
                     { NodeList }
                 </div>
                 <OptionBtn />
@@ -39,8 +52,5 @@ export default connect((state) => {
     };
 }, (dispatch) => {
     return {
-        // hello: (par) => {
-            // dispatch(action(par));
-        // }
     }
 })(List);
