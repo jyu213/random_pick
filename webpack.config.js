@@ -1,22 +1,24 @@
-var webpack = require("webpack");
-var WebpackDevServer = require("webpack-dev-server");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var path = require("path");
-var fs = require("fs");
-var _ = require("lodash");
+'use strict';
 
-var isDev = process.env.NODE_ENV !== 'production';
+const webpack = require("webpack");
+const WebpackDevServer = require("webpack-dev-server");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const path = require("path");
+const fs = require("fs");
+const mergeWith = require('lodash/mergeWith');
+
+const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
     entry: {
-        'main': ['webpack-dev-server/client?http://localhost:8080',
-                    'webpack/hot/dev-server',
-                    './src/entries/main.js']
+        'main': ['webpack-dev-server/client?http://localhost:8080/',
+                'webpack/hot/dev-server',
+                './src/entries/main.js']
     },
     output: {
         publicPath: 'http://localhost:8080/assets',
         path: "./dist/js",
-        filename: "main.js"
+        filename: "[name].js"
     },
     module: {
         loaders: [
@@ -27,7 +29,7 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loaders: ['react-hot','babel?presets[]=es2015&presets[]=react'],
+                loaders: ['react-hot','babel?presets[]=es2015&presets[]=react&plugins[]=babel-plugin-transform-object-rest-spread'],
                 include: path.join(__dirname, 'src')
             }
         ]
@@ -39,7 +41,7 @@ module.exports = {
         }
     },
     devtool: isDev ? 'cheap-module-eval-source-map' : 'source-map',
-    plugins: (function () {
+    plugins: (() => {
         return isDev ? [
             new webpack.DefinePlugin({
                 'process.env': {
@@ -60,5 +62,5 @@ module.exports = {
                 }
             })
         ];
-    })()
+        })()
 };
