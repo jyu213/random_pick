@@ -2,7 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { Link, browserHistory } from 'react-router';
 
-import { addTitlePick, updateTitlePick, addItemPick, deleteItemPick, updateItemPick } from 'actions/pickList';
+import { addTopicTitle, updateTopicTitle, addTopicItem, deleteTopicItem, updateTopicItem } from 'actions/List';
+
+import OptionBtn from './OptionBtn';
 
 import idMaker from 'utils/idMaker';
 import { maxBy, find } from 'lodash';
@@ -13,13 +15,15 @@ class Add extends Component {
     constructor(props) {
         super(props);
 
-        let { title, item } = props;
-        let list = item.items || [];
+        let { title, items } = props;
 
         this.state = {
+            /** @type {String} 主题 title */
             titleText: title,
+            /** @type {String} 主题新子项目文本 */
             newItemText: '',
-            itemStates: list.map((item) => ({
+            /** @type {Object} 主题子项目是否编辑状态 */
+            itemStates: items.map((item) => ({
                 name: item.name,
                 id: item.value,
                 editState: false
@@ -28,27 +32,36 @@ class Add extends Component {
     }
 
     render() {
-        let { pickId, type, title, item, addItem } = this.props;
-        let list = item.items || [];
+        let { topicId, title, items, addItem } = this.props;
         let { titleText, newItemText, itemStates } = this.state;
-        let nodeList = list.map((item, index) => {
+        let nodeList = items.map((item, index) => {
             let data = itemStates[index],
                 itemState = data.editState,
                 name = data.name;
             return (
                 <dd className="add-box__item" key={item.value}>
-                    {itemState ?
+                    { itemState ?
                         <input
+                            className="form-input"
                             type="text"
                             value={name}
                             onChange={this.editItemChangeHandle.bind(this, index)}
                             onBlur={this.editItemBlurHandle.bind(this, index)}
                         />
                          :
-                        <span onClick={this.editItemToggleHandle.bind(this, index, true)}>{item.name}</span>
+                        <span className="add-box__text" onClick={this.editItemToggleHandle.bind(this, index, true)}>{item.name}</span>
                     }
 
-                    <a href="javascript:;" onClick={this.deleteItemHandle.bind(this, item.value)}>delete</a>
+                    { itemState ? null :
+                        <a href="javascript:;"
+                            className="btn btn-blue"
+                            onClick={this.editItemToggleHandle.bind(this, index, true)}
+                        >编辑</a> }
+                    <a
+                        href="javascript:;"
+                        className="btn btn-blue"
+                        onClick={this.deleteItemHandle.bind(this, item.value)}
+                    >删除</a>
                 </dd>
             );
         });
@@ -58,30 +71,32 @@ class Add extends Component {
                 <dl className="add-box">
                     <dt className="add-box__header">
                         <label>
-                            填写标题:
+                            填写项目标题:
                         </label>
                         <input
+                            className="form-input"
                             type="text"
                             value={titleText}
                             onBlur={this.titleBlurHandle.bind(this)}
                             onChange={this.titleChangeHandle.bind(this)}
                         />
                     </dt>
+                    <p className="add-box__list-info">列表选项内容：</p>
                     {nodeList.length > 0 ? nodeList : null}
                     { titleText !== '' &&
                         <dd className="add-box__item add-box__item_options">
                             <input
+                                className="form-input"
                                 type="text"
+                                placeholder="add new item"
                                 value={newItemText}
                                 onChange={this.itemChangeHandle.bind(this)}
                             />
-                            <a href="javascript:;" onClick={this.addItemHandle.bind(this)}>add item</a>
+                            <a href="javascript:;" className="btn btn-blue" onClick={this.addItemHandle.bind(this)}>添加新选项</a>
                         </dd>
                     }
                 </dl>
-                <div className="option-btn">
-                    <Link to="/" className="option-btn__item">back</Link>
-                </div>
+                <OptionBtn />
             </div>
         );
     }
@@ -89,7 +104,7 @@ class Add extends Component {
     titleBlurHandle(event) {
         let value = event.currentTarget.value.trim();
 
-        this.props.updateTitlePick(value, this.props.pickId);
+        this.props.updateTopicTitle(value, this.props.topicId);
     }
     titleChangeHandle(event) {
         let value = event.currentTarget.value;
@@ -107,13 +122,12 @@ class Add extends Component {
     }
     addItemHandle() {
         let { titleText, newItemText, itemStates } = this.state,
-            { pickId, addItem, item } = this.props;
-        let list = item.items || [];
-        let maxItem = maxBy(list, (item) => {return item.value}) || {};
+            { topicId, addItem, items } = this.props;
+        let maxItem = maxBy(items, (item) => {return item.value}) || {};
         let idx =  maxItem.value ? maxItem.value * 1 : 0;
 
         if (newItemText !== '') {
-            addItem(pickId, newItemText, idx + 1);
+            addItem(topicId, newItemText, idx + 1);
             this.setState({
                 newItemText: '',
                 itemStates: [
@@ -162,54 +176,49 @@ class Add extends Component {
         });
     }
     updateItemHandle(name, id) {
-        let { pickId, updateItem } = this.props;
-
-        updateItem(pickId, name, id);
+        let { topicId, updateItem } = this.props;
+        updateItem(topicId, name, id);
     }
     deleteItemHandle(value) {
-        let { pickId, deleteItem } = this.props;
-        deleteItem(pickId, value);
+        let { topicId, deleteItem } = this.props;
+        deleteItem(topicId, value);
     }
 }
 
 export default connect((state, props) => {
     let params = props.params || {},
-        type = params.type || '',
-        pickId = params.pickId || '';
-
-    let list = type !== '0' ? state.userList : state.defaultList;
-
+        topicId = params.topicId || '';
+    let list = state.topicList;
     let itemDetail = find(list, (item) => {
-        return item.id === pickId;
+        return item.id === topicId;
     }) || [];
     let title = itemDetail.title || '';
 
     return {
-        pickId: pickId,
-        type: type,
-        item: itemDetail,
-        title: title
+        title: title,
+        topicId: topicId,
+        items: itemDetail.items || []
     };
 }, (dispatch) => {
     return {
-        updateTitlePick: (value, pickId) => {
+        updateTopicTitle: (title, topicId) => {
             // 修改
-            if (pickId !== '') {
-                dispatch(updateTitlePick(value, pickId));
+            if (topicId !== '') {
+                dispatch(updateTopicTitle(title, topicId));
             } else {
-                let newPickId = idMaker(value);
-                dispatch(addTitlePick(value, newPickId));
-                browserHistory.replace(`/edit/1/${newPickId}`);
+                let newTopicId = idMaker(title);
+                dispatch(addTopicTitle(title, newTopicId));
+                browserHistory.replace(`/edit/${newTopicId}`);
             }
         },
-        updateItem: (pickId, name, id) => {
-            dispatch(updateItemPick(pickId, name, id));
+        updateItem: (topicId, name, id) => {
+            dispatch(updateTopicItem(topicId, name, id));
         },
-        addItem: (pickId, name, id) => {
-            dispatch(addItemPick(pickId, name, id));
+        addItem: (topicId, name, id) => {
+            dispatch(addTopicItem(topicId, name, id));
         },
-        deleteItem: (pickId, id) => {
-            dispatch(deleteItemPick(pickId, id));
+        deleteItem: (topicId, id) => {
+            dispatch(deleteTopicItem(topicId, id));
         }
     };
 })(Add);

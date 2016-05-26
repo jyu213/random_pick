@@ -1,0 +1,27 @@
+.add-box{
+    margin-bottom: 42px;
+}
+.add-box__header{
+    margin: 10% 0;
+}
+.add-box__header label{
+    margin-bottom: 5px;
+    display: block;
+    font-size: 1.2rem; font-weight: bold;
+}
+.add-box__item{
+    margin-bottom: 10px;
+}
+.add-box__list-info{
+    font-size: 1.2rem; font-weight: bold;
+    margin-bottom: 10px;
+}
+.add-box__text{
+    display: inline-block;
+    width: 220px;
+    word-wrap: break-word;
+    vertical-align: top;
+}
+.add-box__item_options{
+    padding-bottom: 30px;
+}
