@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 function OptionsBtn(props) {
     return (
         <div className="option-btn">
-            <Link to="/add" className="option-btn__item">新增</Link>
+            <Link to="/" className="option-btn__item">返回</Link>
         </div>
     );
 }

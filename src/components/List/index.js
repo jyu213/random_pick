@@ -1,42 +1,23 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 
-import idMaker from 'utils/idMaker';
-import defaultListValue from 'data/defaultList';
-import { setDefaultList } from 'actions/pickList';
 import ListItem from './listItem';
 import OptionBtn from './OptionBtn';
 
 import './style';
 
 class List extends Component {
-    constructor(props) {
-        super(props);
-
-        // 默认列表注入
-        if (!localStorage.getItem('defaultList')) {
-            let defaultListJson;
-            defaultListValue.map((item) => {
-                item.id = idMaker(item.title);
-                return item;
-            });
-            defaultListJson = JSON.stringify(defaultListValue);
-            localStorage.setItem('defaultList', defaultListJson);
-        }
-    }
-
     render() {
-        let { userList, defaultList } = this.props;
-        let type = userList && userList.length > 0 ? 1 : 0;
-        let list = (type ? userList : defaultList) || [];
+        let { topicList } = this.props;
+        let list = topicList || [];
 
         let NodeList = list.map((item) => {
-            return (<ListItem data={item} type={type} key={item.title} />);
+            return (<ListItem data={item} key={item.id} />);
         });
 
         return (
-            <div className="pick-box">
-                <div className="pick-list">
+            <div className="topic-box">
+                <div className="topic-list">
                     { NodeList }
                 </div>
                 <OptionBtn />
@@ -47,10 +28,6 @@ class List extends Component {
 
 export default connect((state) => {
     return {
-        userList: state.userList,
-        defaultList: state.defaultList
+        topicList: state.topicList
     };
-}, (dispatch) => {
-    return {
-    }
 })(List);

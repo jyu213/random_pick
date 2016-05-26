@@ -1,4 +1,23 @@
+html{
+}
 .container{
     margin: 0 auto;
     max-width: 640px;
+}
+
+.btn{
+    display: inline-block;
+    margin: 0 5px; padding: 0 15px;
+    height: 30px; line-height: 30px;
+    text-align: center;
+}
+.btn-blue{
+    color: #fff;
+    background: #318CDA;
+}
+
+.form-input{
+    padding: 0 10px;
+    width: 220px;
+    height: 30px; line-height: 30px;
 }
