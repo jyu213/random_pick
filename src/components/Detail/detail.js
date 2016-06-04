@@ -60,6 +60,7 @@ class Detail extends Component {
             stateObj;
 
         if (len > 0) {
+            // @REVIEW: http://pinggod.com/2016/Math-random/
             let randomNumber = Math.floor(Math.random() * len);
             stateObj = items[randomNumber];
         } else {
